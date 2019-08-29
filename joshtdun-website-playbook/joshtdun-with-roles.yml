@@ -1,0 +1,16 @@
+---
+
+- hosts: digitalocean
+  become: yes
+  remote_user: root
+  roles:
+    - "initial-setup"
+    
+- hosts: digitalocean
+  become: yes
+  remote_user: jdebcloud
+  roles:
+    - "django-project"
+    - "postgresql"
+    - "gunicorn"
+    - "nginx"

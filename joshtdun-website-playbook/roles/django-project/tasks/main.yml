@@ -1,0 +1,109 @@
+--- # This will install all needed apt packages and python modules
+    # that are needed for a django deployment of my personal site 
+    # as well as clone the needed repo from github
+
+- name: "update and upgrade apt"
+  apt:
+    update-cache: yes
+    upgrade: yes
+
+- name: "install nginx"
+  apt:
+    update-cache: yes
+    name: nginx
+    state: latest
+
+- name: "install needed python packages"
+  apt:
+    update-cache: yes
+    name:
+      - python3-dev
+      - python3-venv
+      - python3-pip
+      - python3-psycopg2
+    state: present
+
+- name: "install curl"
+  apt:
+    update-cache: yes
+    name: curl
+    state: present
+
+- name: "install postgresql-11 packages"
+  apt:
+    update-cache: yes 
+    name:
+      - postgresql-11
+      - libpq-dev
+      - postgresql-contrib
+    state: present
+
+- name: "install git"
+  apt:
+    update-cache: yes
+    name: git
+    state: present
+
+- name: "install certbot packages"
+  apt:
+    update-cache: yes
+    name: 
+      - python3-acme
+      - python3-certbot
+      - python3-mock
+      - python3-openssl
+      - python3-pkg-resources
+      - python3-pyparsing
+      - python3-zope.interface
+      - python3-certbot-nginx
+    state: present
+
+- name: "create directory for project"
+  file:
+    path: /joshtdun/joshtdun/
+    state: directory
+    recurse: yes
+    owner: "{{ userName}}" 
+    group: "{{ userName}}"
+    mode: 0755
+ 
+
+- name: "this will clone the joshtdun2.0 into joshtdun"
+  become: no
+  git:
+    repo: 'https://github.com/joshtdun/joshtdun.com2.0.git'
+    dest: /joshtdun/joshtdun/
+
+- name: "create venv joshtdun"
+  become: no
+  ignore_errors: yes
+  command: python3 -m venv /joshtdun/ joshtdun
+  args:
+    chdir: /joshtdun/
+  
+
+- name: "install django only into /joshtdun"
+  become: no
+  pip:
+    chdir: /joshtdun
+    executable: /joshtdun/bin/pip3
+    name: django
+    state: present
+
+- name: "install rest of the python modules"
+  become: no
+  pip:
+    chdir: /joshtdun
+    executable: /joshtdun/bin/pip3
+    name:
+      - gunicorn
+      - psycopg2-binary
+    state: present
+
+- name: "install the project requirements from pip"
+  become: no
+  pip:
+    chdir: /joshtdun
+    executable: /joshtdun/bin/pip3
+    requirements: /joshtdun/joshtdun/requirements.txt
+    state: present

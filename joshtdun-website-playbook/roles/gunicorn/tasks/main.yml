@@ -1,0 +1,35 @@
+--- # configrue gunicorn to serve the application 
+
+- name: "create gunicorn socket file"
+  copy:
+    src: gunicorn.socket
+    dest: /etc/systemd/system/gunicorn.socket
+    owner: root
+    group: root
+
+- name: "create gunicorn service file"
+  copy: 
+    src: gunicorn.service
+    dest: /etc/systemd/system/gunicorn.service
+    owner: root
+    group: root
+
+- name: "start and enable the gunicorn socket"
+  systemd: 
+    name: gunicorn.socket
+    state: started
+    enabled: yes
+
+- name: "check the gunicorn socket exists"
+  stat:
+    path: /run/gunicorn.sock
+  register: stat
+
+- debug: 
+    msg: "file is a socket"
+  when: stat.stat.issock is defined and stat.stat.issock
+
+- name: "check the gunicorn service"
+  systemd:
+    name: gunicorn.service
+    state: started

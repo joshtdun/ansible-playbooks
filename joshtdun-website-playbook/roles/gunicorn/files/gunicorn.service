@@ -1,0 +1,17 @@
+[Unit]
+Description=gunicorn daemon
+Requires=gunicorn.socket
+After=network.target
+
+[Service]
+User=jdebcloud
+Group=www-data
+WorkingDirectory=/joshtdun/joshtdun/
+ExecStart=/joshtdun/bin/gunicorn \
+          --access-logfile - \
+          --workers 3 \
+          --bind unix:/run/gunicorn.sock \
+          joshtdun.wsgi:application
+
+[Install]
+WantedBy=multi-user.target

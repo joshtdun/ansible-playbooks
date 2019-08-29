@@ -1,0 +1,17 @@
+--- # Create a droplet
+# define the name you would like in the vars/main.yml
+
+- name: "create a new droplet"
+  digital_ocean_droplet:
+    state: present
+    name: "{{ droplet_name }}"
+    size: s-1vcpu-1gb
+    region: nyc1
+    image: debian-10-x64 
+    private_networking: yes
+    monitoring: yes
+    backups: no
+    ssh_keys:
+      - '25146831'
+      - '25148218'
+    ipv6: no

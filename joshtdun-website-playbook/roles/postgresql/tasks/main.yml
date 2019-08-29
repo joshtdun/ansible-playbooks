@@ -1,0 +1,40 @@
+--- # Setup the needed postgresql config for my website
+    # finish the django setup which is uploading a .env file
+    # and performing the needed database tasks
+    # config values need to be filled in in vars/main.yml
+    # and the .env.j2 file needs to be filled out in templates/.env.j2
+
+- name: "create the postgreql user that the project will use"
+  postgresql_user:
+    name: "{{ postgres_user }}"
+    password: "{{ postgres_password }}"
+    role_attr_flags: CREATEDB
+  become: yes
+  become_user: postgres
+  become_method: sudo
+
+- name: "create the database that the project will use"
+  postgresql_db:
+    name: "{{ postgres_database }}" 
+    state: present
+    owner: "{{ postgres_user }}"
+  become: yes
+  become_user: postgres
+  become_method: sudo
+
+- name: "upload .env file"
+  template:
+    src: .env.j2
+    dest: /joshtdun/joshtdun/.env
+    owner: "{{ userName }}"
+    group: "{{ username }}" 
+
+- name: "make migrations for django project"
+  command: /joshtdun/bin/python manage.py makemigrations blog --settings=joshtdun.prod_settings
+  args:
+    chdir: /joshtdun/joshtdun/
+
+- name: "perform migration for django project"
+  command: /joshtdun/bin/python manage.py migrate --settings=joshtdun.prod_settings
+  args:
+    chdir: /joshtdun/joshtdun/

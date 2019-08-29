@@ -1,0 +1,5 @@
+--- # Roles 
+
+- hosts: local
+  roles:
+    - "DO-droplet"

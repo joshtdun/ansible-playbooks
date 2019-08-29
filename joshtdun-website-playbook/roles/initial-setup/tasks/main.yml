@@ -1,0 +1,24 @@
+--- # This will create the user and copy keys as well
+    # as well as configure passwordless sudo access
+    # Define the user in vars/main.yml
+
+- name: "create user from vars"
+  user:
+    name: "{{ userName }}"
+    shell: /bin/bash
+    groups: sudo
+    append: yes
+- name: "copy .ssh folder from root to new user"
+  copy:
+    remote_src: yes      
+    src: /root/.ssh
+    dest: "/home/{{ userName }}/"
+    owner: "{{ userName }}"
+    group: "{{ userName }}"
+- name: "replace the sudoers file"
+  copy:
+    src: newSudoer
+    dest: /etc/sudoers
+    owner: root
+    group: root
+    mode: '440'

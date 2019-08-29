@@ -1,0 +1,20 @@
+--- # Nginx tasks
+
+
+- name: "upload nginx config"
+  copy:
+    src: joshtdun.nginx.conf
+    dest: /etc/nginx/sites-available/joshtdun
+    owner: root
+    group: root
+
+- name: "create sym-link to sites-enabled"
+  file:
+    src: /etc/nginx/sites-available/joshtdun
+    dest: /etc/nginx/sites-enabled/joshtdun
+    state: link
+
+- name: "restart nginx"
+  systemd:
+    name: nginx
+    state: restarted

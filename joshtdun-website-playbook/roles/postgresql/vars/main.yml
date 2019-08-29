@@ -1,0 +1,12 @@
+---
+# system username line 28 amd 29
+userName:
+
+# Username you would like for postgres
+postgres_user: 
+
+# Password you would like for the above user
+postgres_password: 
+
+# Name of the database you would like to create
+postgres_database: 

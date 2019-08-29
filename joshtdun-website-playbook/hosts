@@ -1,0 +1,11 @@
+[digitalocean]
+joshtdun.com
+
+[local]
+localhost ansible_connection=local
+
+[local:vars]
+ansible_python_interpreter=/usr/bin/python3 
+
+[digitalocean:vars]
+ansible_python_interpreter=/usr/bin/python3
