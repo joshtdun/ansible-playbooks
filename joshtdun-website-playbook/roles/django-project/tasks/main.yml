@@ -1,6 +1,7 @@
 --- # This will install all needed apt packages and python modules
     # that are needed for a django deployment of my personal site 
-    # as well as clone the needed repo from github
+    # as well as clone the needed repo from github 
+    # need to fill in values in the vars/main.yml
 
 - name: "update and upgrade apt"
   apt:
